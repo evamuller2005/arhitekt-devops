@@ -111,3 +111,34 @@
   systemd:
     name: nginx
     state: restarted
+
+- name: create systemd service
+  copy:
+    dest: /etc/systemd/system/arhitekt.service
+    content: |
+      [Unit]
+      Description=Arhitekt ASP.NET Core Application
+      After=network.target docker.service docker.socket
+
+      [Service]
+      WorkingDirectory=/home/vagrant/arhitekt-published
+      ExecStart=/usr/bin/dotnet /home/vagrant/arhitekt-published/Arhitekt.dll
+      Restart=always
+      RestartSec=10
+      User=vagrant
+      Environment=ASPNETCORE_URLS=http://0.0.0.0:5059
+      Environment=ASPNETCORE_ENVIRONMENT=Production
+      Environment=ConnectionStrings__DefaultConnection=Server=localhost,1433;Database=Arhitekt;User Id=sa;Password=Arhitekt2025;TrustServerCertificate=True;
+      Environment=Redis__Host=localhost:6379
+
+      [Install]
+      WantedBy=multi-user.target
+
+- name: reload systemd
+  command: systemctl daemon-reload
+
+- name: enable arhitekt service
+  systemd:
+    name: arhitekt.service
+    enabled: yes
+    state: started     
