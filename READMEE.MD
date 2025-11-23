@@ -2,7 +2,7 @@
 
 #### Overview
 
-The Arhitekt Project is a simplified web application designed for browsing architectural projects and viewing detailed information about each project. This repository contains information on how to run the app locally, as well as how to provision a development VM using Vagrant.
+The Arhitekt Project is a simplified web application designed for browsing architectural projects and viewing detailed information about each project. This repository contains information on how to run the app locally, as well as how to provision a VM using Vagrant.
 
 ---
 
