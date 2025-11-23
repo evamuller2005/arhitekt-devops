@@ -146,4 +146,4 @@ The video demonstrates the entire automated provisioning workflow, the service s
 
 ---
 
-Link to the deployment video: 
+Link to the deployment video: `https://drive.google.com/file/d/1DG09yW5dZKYOtalpf47b59Q9N-ox_gll/view?usp=sharing`
