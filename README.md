@@ -1,157 +1,149 @@
-# Arhitekt — Platforma za arhitekte
+# Arhitekt Project 
 
-# Avtorja  
+### Overview
 
-Gregor Vidrih - 63220356    
-Eva Müller - 63220501  
+The Arhitekt Project is a simplified web application for browsing architectural projects and viewing detailed information about each one.
+It is built with C#/.NET, Razor views, and a simple frontend.
+This repository also includes instructions for running the app locally and provisioning it via Vagrant + Ansible on a virtual machine.
 
-# Cilji in Opis
+---
 
-Arhitekt je spletna platforma, ki arhitektom omogoča raziskovanje projektov, povezovanje z drugimi arhitekti, objavljanje lastnih del ter pregledovanje skupnosti.
+### Key Features
 
-- Povezovanje arhitektov.
-- Deljenje idej in projektov.
-- Promocija dosežkov arhitektov.
-- Gradnja mreže strokovnjakov.
+- Browse projects: A homepage displaying all architectural projects
+- Project details: Individual pages showing name, description, images, and metadata
+- Database seeding: Projects are automatically inserted on first run
+- Simple UI: Lightweight and fast Razor-based frontend
 
-Sistem je sestavljen iz:
-- ASP.NET Core 8 web aplikacije
-- MSSQL podatkovne baze
-- Redis strežnika za caching / sessions
-- Docker containerjev
-- Vagrant + Ansible provisioning (DevOps setup)
+---
 
-# Glavne funkcionalnosti
+### Tech Stack
 
-1. Uporabniški profili  
-   - Registracija in prijava z e-pošto.  
-   - Seznam objavljenih projektov pod My Projects.
-   - Možnost urejanja profila. 
+##### Frontend:
 
-2. Objava projektov
-   - Arhitekti lahko dodajo svoje projekte z naslednjimi podatki:
-     - Naslov projekta.
-     - Opis projekta.
-     - Slika.
-     - Datum ustvarjanja projekta.
+- HTML
+- CSS
+- JavaScript
+- Razor Pages
 
-3. Brskanje in raziskovanje
-   - Vsi projekti so prikazani na domači strani v obliki mreže.  
-   - Iskanje po imenih projektov, arhitektih in ključnih besedah.  
-   - Klik na projekt prikaže podrobnosti o njem.
+##### Backend:
 
-# Tehnologije
-- Backend - ASP.NET Core 8
-- Frontend	- Razor Pages / HTML / Bootstrap
-- Podatkovna baza -	MSSQL Server (Docker)
-- Cache	Redis 7 - (Docker)
-- Avtentikacija - ASP.NET Identity
-- ORM - Entity Framework Core
-- DevOps - Vagrant + Ansible
-- Containerji	- Docker
+- C# / .NET 8
+- Entity Framework Core (Database auto-created via EnsureCreated)
+- Redis (caching)
+- MSSQL Server (running in Docker)
 
-# Izvedba Nalog
+##### Infrastructure:
 
-Gregor Vidrih:
-- Nastavitev podatkovne baze in implementacija avtentikacije uporabnikov.
-- Razvoj Android aplikacije in implementacija funkcionalnosti za iskanje projektov.
-- Razvoj sistema za dodajanje in prikazovanje projektov.
+- Vagrant
+- Ansible
+- Ubuntu Linux
+- Nginx (inside VM, for production)
+- Systemd service for backend
 
-Eva Müller:
-- Oblikovanje uporabniškega vmesnika spletne aplikacije, vključno z izgledom strani, prikazom slik in postavitvijo vsebine.
-- Objava spletne storitve v oblak.
-- Optimizacija vizualnih elementov spletne strani.
+---
 
-# Development način
+### Run Locally
 
-#### Posodobi pakete:
+##### 1. Clone the repository
 
-sudo apt update  
-sudo apt upgrade -y  
+`git clone https://github.com/evamuller2005/arhitekt-devops.git`   
 
-#### Namesti Docker:
+`cd arhitekt-devops`
 
-sudo apt install -y docker.io  
-sudo systemctl enable docker  
-sudo systemctl start docker  
+##### 2. Update system
 
-#### Zaženi MSSQL:
+`sudo apt update`
 
-sudo docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Arhitekt2025" -e "MSSQL_PID=Developer" -p 1433:1433 --name arhitekt-sql -d mcr.microsoft.com/mssql/server:2025-latest  
+##### 3. Install Docker (for MSSQL + Redis)
 
-#### Zaženi Redis:
+`sudo apt install -y docker.io`   
+`sudo systemctl enable docker`   
+`sudo systemctl start docker`   
 
-sudo docker run -p 6379:6379 --name arhitekt-redis -d redis:7  
+##### 4. Run SQL Server in Docker
 
-#### Namesti .NET SDK:
+`sudo docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Arhitekt2025" -e "MSSQL_PID=Developer" -p 1433:1433 --name arhitekt-sql -d mcr.microsoft.com/mssql/server:2022-latest`
 
-sudo apt install -y dotnet-sdk-8.0  
+##### 5. Run Redis in Docker
 
-#### Kloniraj projekt 
+`sudo docker run --name arhitekt-redis -p 6379:6379 -d redis:latest`
 
-git clone https://github.com/evamuller2005/arhitekt-devops.git  
-cd arhitekt-devops/Arhitekt  
+##### 6. Install Microsoft package feed for .NET 8
 
-#### Izvedi migracije
+`wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb`
+`sudo dpkg -i packages-microsoft-prod.deb`
+`sudo apt update`
 
-dotnet tool install --global dotnet-ef --version 8.0.2  
-export PATH="$PATH:$HOME/.dotnet/tools"  
+##### 7. Install .NET 8 SDK
 
-dotnet ef database update
+`sudo apt install -y dotnet-sdk-8.0`
 
-#### 4. Zaženi development
+##### 8. Navigate to the project folder
 
-dotnet run
+`cd Arhitekt/`
 
-##### Aplikacija bo dostopna na http://localhost:5059
+##### 9. Run the application
 
-# Production način
+`dotnet build`   
+`dotnet run`   
 
-#### Publish aplikacije
+##### The app will start on a URL displayed in the terminal (e.g. http://localhost:5059).
 
-cd ~/arhitekt-devops  
-dotnet publish -c Release -o ~/arhitekt-published  
+---
 
-#### Systemd service
+### System Requirements for Vagrant
 
-#### ustvari /etc/systemd/system/arhitekt.service:
+##### Host machine requirements
 
-[Unit]
-Description=Arhitekt ASP.NET Core Application  
-After=network.target docker.service docker.socket
+- Linux (Ubuntu recommended)
+- VirtualBox
+- Vagrant
+- Git
 
-[Service]
-WorkingDirectory=/home/vagrant/arhitekt-published
-ExecStart=/usr/bin/dotnet /home/vagrant/arhitekt-published/Arhitekt.dll
-Restart=always
-RestartSec=10
-User=vagrant
+##### Installed automatically inside the VM
 
-Environment=ASPNETCORE_ENVIRONMENT=Production
-Environment=ASPNETCORE_URLS=http://0.0.0.0:5059
-Environment=ConnectionStrings__DefaultConnection=Server=localhost,1433;Database=Arhitekt;User Id=sa;Password=Arhitekt2025;TrustServerCertificate=True;
-Environment=Redis__Host=localhost:6379
+- .NET SDK / Runtime
+- Nginx reverse proxy
+- Required system packages
+- Systemd service (arhitekt-backend.service)
 
-[Install]
-WantedBy=multi-user.target
+---
 
-#### Zaženi arhitekt.service
+### Vagrant
 
-sudo systemctl daemon-reload  
-sudo systemctl enable arhitekt.service  
-sudo systemctl start arhitekt.service  
-sudo systemctl status arhitekt.service  
+##### 1. Install required packages:
 
-# DevOps Deployment (Vagrant + Ansible)
+`sudo apt update`    
+`sudo apt install virtualbox virtualbox-dkms linux-headers-generic-hwe-22.04`    
+`wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg`   
+`echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list`   
+`sudo apt update && sudo apt install vagrant`
+`sudo apt install git -y`  
 
-- Navodila za Ubuntu 22.04 / 24.04
+##### 2. Clone the repository:
 
-#### virtualBox, vagrant, ansible
+`git clone https://github.com/evamuller2005/arhitekt-devops.git`
 
-sudo apt install -y virtualbox   
-sudo apt install -y vagrant   
-sudo apt install -y ansible   
+##### 3. Run Vagrant from the correct directory:
 
-#### run vagrant
+`cd arhitekt-devops/infra/vagrant`  
+`vagrant up`
 
-vagrant up
+---
+
+### Deployment Video Explanation
+
+The video shows the full deployment process of the Arhitekt application using Vagrant on my assigned DevOps VM.
+
+From my local machine (macOS) I connect to the DevOps VM via SSH, and inside this remote environment I use Vagrant to create a nested VirtualBox VM, which is then fully provisioned using Vagrant + Ansible (installing .NET, configuring Nginx, deploying the published app, and creating a systemd service).
+
+Additionally, on the DevOps VM itself, I configured Nginx as a reverse proxy that exposes the application publicly through the university domain `https://devops-vm-30.lrk.si/.`
+
+This reverse proxy listens on port 443 and forwards incoming HTTPS traffic to the nested VM where the Arhitekt application is running internally, allowing the app to be securely accessible from the internet without exposing VirtualBox ports.
+
+The video demonstrates the entire automated provisioning workflow, the service starting successfully, and how the deployed application becomes reachable through the Nginx reverse-proxy domain.
+
+---
+
+Link to the deployment video: 
