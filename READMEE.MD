@@ -22,7 +22,7 @@ The Arhitekt Project is a simplified web application designed for browsing archi
 
 ---
 
-### Run locally
+### Run Locally
 
 ##### 1. Clone the repository
 
