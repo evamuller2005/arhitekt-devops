@@ -2,23 +2,44 @@
 
 ### Overview
 
-The Arhitekt Project is a simplified web application designed for browsing architectural projects and viewing detailed information about each project. This repository contains information on how to run the app locally, as well as how to provision a VM using Vagrant.
+The Arhitekt Project is a simplified web application for browsing architectural projects and viewing detailed information about each one.
+It is built with C#/.NET, Razor views, and a simple frontend.
+This repository also includes instructions for running the app locally and provisioning it via Vagrant + Ansible on a virtual machine.
 
 ---
 
 ### Key Features
 
-- Browse projects: A homepage displaying all published architectural projects
-- Project details: Individual project pages with descriptions.
+- Browse projects: A homepage displaying all architectural projects
+- Project details: Individual pages showing name, description, images, and metadata
+- Database seeding: Projects are automatically inserted on first run
+- Simple UI: Lightweight and fast Razor-based frontend
 
 ---
 
 ### Tech Stack
 
+##### Frontend:
+
 - HTML
 - CSS
 - JavaScript
-- C# / .NET 
+- Razor Pages
+
+##### Backend:
+
+- C# / .NET 8
+- Entity Framework Core (Database auto-created via EnsureCreated)
+- Redis (caching)
+- MSSQL Server (running in Docker)
+
+##### Infrastructure:
+
+- Vagrant
+- Ansible
+- Ubuntu Linux
+- Nginx (inside VM, for production)
+- Systemd service for backend
 
 ---
 
@@ -50,7 +71,7 @@ The Arhitekt Project is a simplified web application designed for browsing archi
 
 ##### 6. Install Microsoft package feed for .NET 8
 
-`wget https://packages.microsoft.com/config/ubuntu/22.04packages-microsoft-prod.deb -O packages-microsoft-prod.deb`
+`wget wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb`
 `sudo dpkg -i packages-microsoft-prod.deb`
 `sudo apt update`
 
@@ -58,7 +79,7 @@ The Arhitekt Project is a simplified web application designed for browsing archi
 
 `sudo apt install -y dotnet-sdk-8.0`
 
-##### 8. Go to your backend project folder (THIS is the correct one)
+##### 8. Navigate to the project folder
 
 `cd Arhitekt/`
 
@@ -66,6 +87,8 @@ The Arhitekt Project is a simplified web application designed for browsing archi
 
 `dotnet build`   
 `dotnet run`   
+
+##### App will start on http://localhost:5059
 
 ---
 
@@ -78,10 +101,10 @@ The Arhitekt Project is a simplified web application designed for browsing archi
 - Vagrant
 - Git
 
-#### Installed automatically inside the VM
+##### Installed automatically inside the VM
 
 - .NET SDK / Runtime
-- Nginx
+- Nginx reverse proxy
 - Required system packages
 - Systemd service (arhitekt-backend.service)
 
@@ -89,25 +112,41 @@ The Arhitekt Project is a simplified web application designed for browsing archi
 
 ### Vagrant
 
-#### 1. Install required packages:
+##### 1. Install required packages:
 
-`sudo apt update`
+`sudo apt update`    
+`sudo apt install virtualbox virtualbox-dkms linux-headers-generic-hwe-22.04`    
+`wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg`   
+`echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list`   
+`sudo apt update && sudo apt install vagrant`
+`sudo apt install git -y`  
 
-`sudo apt install virtualbox virtualbox-dkms linux-headers-generic-hwe-22.04`
-
-`wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list sudo apt update && sudo apt install vagrant`
-
-`sudo apt install git -y`
-
-#### 2. Clone the repo, and enter the vagrant folder:
+##### 2. Clone the repository:
 
 `git clone https://github.com/evamuller2005/arhitekt-devops.git`
 
-#### 3. run the vagrant command from varant directory:
+##### 3. Run Vagrant from the correct directory:
 
-`cd fitness-project/infra/vagrant`
+`cd fitness-project/infra/vagrant`  
 `vagrant up`
 
 ---
+
+## Deployment Video Explanation
+
+The video shows the full deployment process of the Arhitekt application using Vagrant on my assigned DevOps VM. From my local machine (macOS) I connect to the DevOps VM via SSH, and inside this remote environment I use Vagrant to create a nested VirtualBox VM, which is then fully provisioned using Vagrant + Ansible (installing .NET, configuring Nginx, deploying the published app, and creating a systemd service).
+
+Additionally, on the DevOps VM itself, I configured Nginx as a reverse proxy that exposes the application publicly through the university domain https://devops-vm-30.lrk.si/
+. This reverse proxy listens on port 443 and forwards incoming HTTPS traffic to the nested VM where the Arhitekt application is running internally, allowing the app to be securely accessible from the internet without exposing VirtualBox ports.
+
+The video demonstrates the entire automated provisioning workflow, the service starting successfully, and how the deployed application becomes reachable through the Nginx reverse-proxy domain.
+
+
+- an SSH tunnel from my local machine (macOS)
+- into the DevOps environment
+- where a nested VirtualBox VM is created
+- and fully provisioned using Vagrant + Ansible
+
+
 
 Link to the deployment video: 
