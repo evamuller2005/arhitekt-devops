@@ -1,28 +1,93 @@
-# Arhitekt Project Overview
+# Arhitekt Project 
 
-**Purpose:**
-The Arhitekt Project is a simplified web application designed for browsing architectural projects and viewing detailed information about each project. This repository contains the automation required to deploy the Arhitekt application using Vagrant, Ansible.
+#### Overview
 
-The goal is to offer a fully reproducible VM environment that deploys the application with a single command.
+The Arhitekt Project is a simplified web application designed for browsing architectural projects and viewing detailed information about each project. This repository contains information on how to run the app locally, as well as how to provision a development VM using Vagrant.
 
 ---
 
 #### Key Features
 
 - Browse projects: A homepage displaying all published architectural projects
-- Project details: Individual project pages with descriptions, images, categories, and metadata
+- Project details: Individual project pages with descriptions.
 - Simple and clean UI: Lightweight frontend for fast browsing
 
 ---
 
-## Tech Stack
+#### Tech Stack
 
 - HTML
 - CSS
 - JavaScript
-- C# / .NET Web API
+- C# / .NET 
 
 ---
+
+#### Run locally
+
+###### 1. Clone the repository
+git clone https://github.com/evamuller2005/arhitekt-devops.git
+cd arhitekt-devops
+
+###### 2. Update system
+sudo apt update
+
+###### 3. Install Docker (for MSSQL + Redis)
+sudo apt install -y docker.io
+sudo systemctl enable docker
+sudo systemctl start docker
+
+###### 4. Run SQL Server in Docker
+sudo docker run -e "ACCEPT_EULA=Y" \
+    -e "MSSQL_SA_PASSWORD=Arhitekt2025" \
+    -e "MSSQL_PID=Developer" \
+    -p 1433:1433 \
+    --name arhitekt-sql \
+    -d mcr.microsoft.com/mssql/server:2022-latest
+
+###### 5. Run Redis in Docker
+sudo docker run --name arhitekt-redis \
+    -p 6379:6379 \
+    -d redis:latest
+
+###### 6. Install Microsoft package feed for .NET 8
+wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+sudo dpkg -i packages-microsoft-prod.deb
+sudo apt update
+
+###### 7. Install .NET 8 SDK
+sudo apt install -y dotnet-sdk-8.0
+
+###### 8. Go to your backend project folder (THIS is the correct one)
+cd Arhitekt/
+
+###### 9. Run the application
+dotnet build
+dotnet run
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## System Requirements
 
