@@ -67,6 +67,8 @@ The Arhitekt Project is a simplified web application designed for browsing archi
 `dotnet build`   
 `dotnet run`   
 
+---
+
 ### System Requirements for Vagrant
 
 ##### Host machine requirements
@@ -82,6 +84,8 @@ The Arhitekt Project is a simplified web application designed for browsing archi
 - Nginx
 - Required system packages
 - Systemd service (arhitekt-backend.service)
+
+---
 
 ### Vagrant
 
@@ -103,5 +107,7 @@ The Arhitekt Project is a simplified web application designed for browsing archi
 
 `cd fitness-project/infra/vagrant`
 `vagrant up`
+
+---
 
 Link to the deployment video: 
