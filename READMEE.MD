@@ -141,12 +141,4 @@ Additionally, on the DevOps VM itself, I configured Nginx as a reverse proxy tha
 
 The video demonstrates the entire automated provisioning workflow, the service starting successfully, and how the deployed application becomes reachable through the Nginx reverse-proxy domain.
 
-
-- an SSH tunnel from my local machine (macOS)
-- into the DevOps environment
-- where a nested VirtualBox VM is created
-- and fully provisioned using Vagrant + Ansible
-
-
-
 Link to the deployment video: 
