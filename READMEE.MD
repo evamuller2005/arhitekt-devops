@@ -67,34 +67,9 @@ The Arhitekt Project is a simplified web application designed for browsing archi
 `dotnet build`   
 `dotnet run`   
 
+### System Requirements for Vagrant
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## System Requirements
-
-#### Host machine requirements
+##### Host machine requirements
 
 - Linux (Ubuntu recommended)
 - VirtualBox
@@ -108,7 +83,7 @@ The Arhitekt Project is a simplified web application designed for browsing archi
 - Required system packages
 - Systemd service (arhitekt-backend.service)
 
-## Vagrant 
+### Vagrant
 
 #### 1. Install required packages:
 
