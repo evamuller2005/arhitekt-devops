@@ -71,7 +71,7 @@ This repository also includes instructions for running the app locally and provi
 
 ##### 6. Install Microsoft package feed for .NET 8
 
-`wget wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb`
+`wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb`
 `sudo dpkg -i packages-microsoft-prod.deb`
 `sudo apt update`
 
@@ -88,7 +88,7 @@ This repository also includes instructions for running the app locally and provi
 `dotnet build`   
 `dotnet run`   
 
-##### App will start on http://localhost:5059
+##### The app will start on a URL displayed in the terminal (e.g. http://localhost:5059).
 
 ---
 
@@ -127,18 +127,23 @@ This repository also includes instructions for running the app locally and provi
 
 ##### 3. Run Vagrant from the correct directory:
 
-`cd fitness-project/infra/vagrant`  
+`cd arhitekt-devops/infra/vagrant`  
 `vagrant up`
 
 ---
 
-## Deployment Video Explanation
+### Deployment Video Explanation
 
-The video shows the full deployment process of the Arhitekt application using Vagrant on my assigned DevOps VM. From my local machine (macOS) I connect to the DevOps VM via SSH, and inside this remote environment I use Vagrant to create a nested VirtualBox VM, which is then fully provisioned using Vagrant + Ansible (installing .NET, configuring Nginx, deploying the published app, and creating a systemd service).
+The video shows the full deployment process of the Arhitekt application using Vagrant on my assigned DevOps VM.
 
-Additionally, on the DevOps VM itself, I configured Nginx as a reverse proxy that exposes the application publicly through the university domain https://devops-vm-30.lrk.si/
-. This reverse proxy listens on port 443 and forwards incoming HTTPS traffic to the nested VM where the Arhitekt application is running internally, allowing the app to be securely accessible from the internet without exposing VirtualBox ports.
+From my local machine (macOS) I connect to the DevOps VM via SSH, and inside this remote environment I use Vagrant to create a nested VirtualBox VM, which is then fully provisioned using Vagrant + Ansible (installing .NET, configuring Nginx, deploying the published app, and creating a systemd service).
+
+Additionally, on the DevOps VM itself, I configured Nginx as a reverse proxy that exposes the application publicly through the university domain `https://devops-vm-30.lrk.si/.`
+
+This reverse proxy listens on port 443 and forwards incoming HTTPS traffic to the nested VM where the Arhitekt application is running internally, allowing the app to be securely accessible from the internet without exposing VirtualBox ports.
 
 The video demonstrates the entire automated provisioning workflow, the service starting successfully, and how the deployed application becomes reachable through the Nginx reverse-proxy domain.
+
+---
 
 Link to the deployment video: 
