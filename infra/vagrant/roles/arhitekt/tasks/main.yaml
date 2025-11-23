@@ -46,4 +46,4 @@
 - name: publish dotnet app
   command: dotnet publish -c Release -o /home/vagrant/arhitekt-published
   args:
-    chdir: /home/vagrant/arhitekt-devops    
+    chdir: /home/vagrant/arhitekt-devops
